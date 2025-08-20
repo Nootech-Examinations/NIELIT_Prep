@@ -88,8 +88,8 @@
   </header>
 
   <section class="form-section">
-    <p>Please click the button below to start the exam:</p>
-    <div style="text-align:center; margin-top: 30px;">
+    <p id="instruction-text">Please click the button below to start the exam:</p>
+    <div id="start-btn-section" style="text-align:center; margin-top: 30px;">
       <a href="#" onclick="openExam(); return false;" class="cta-button">Start Exam</a>
     </div>
     <!-- Hidden iframe initially -->
@@ -111,8 +111,15 @@
   <script>
     function openExam() {
       const frame = document.getElementById('examFrame');
+      const btnSection = document.getElementById('start-btn-section');
+      const instructionText = document.getElementById('instruction-text');
+      
       frame.src = "https://forms.gle/HsBmU9XJVGPrfnkr8";
       frame.style.display = "block";
+
+      // hide button + text
+      btnSection.style.display = "none";
+      instructionText.style.display = "none";
     }
   </script>
 
