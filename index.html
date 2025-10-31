@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exam Portal | Nootech Computer Centre</title>
+  <title>Nootech Online Exam Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -17,6 +17,13 @@
     }
     header h1 { font-size: 2.8rem; margin-bottom: 15px; }
     header h3 { font-weight: 400; font-size: 1.2rem; max-width: 800px; margin: auto; }
+
+    .timer {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #fff;
+      margin-top: 15px;
+    }
 
     .form-section {
       padding: 60px 20px;
@@ -34,7 +41,7 @@
       border: none;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      display: none; /* hidden until button clicked */
+      display: none;
     }
 
     .cta-button {
@@ -78,6 +85,14 @@
       height: 24px;
       vertical-align: middle;
     }
+
+    #timeUpMsg {
+      display: none;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #b91c1c;
+      margin-top: 40px;
+    }
   </style>
 </head>
 <body>
@@ -85,6 +100,7 @@
   <header>
     <h1>Welcome to Nootech Computer Centre's Exam Portal</h1>
     <h3>"A government-certified organization proudly continuing its successful journey in the IT-educational field for the last 7 years."</h3>
+    <div class="timer" id="timer">Exam Time: 60:00</div>
   </header>
 
   <section class="form-section">
@@ -92,8 +108,10 @@
     <div id="start-btn-section" style="text-align:center; margin-top: 30px;">
       <a href="#" onclick="openExam(); return false;" class="cta-button">Start Exam</a>
     </div>
+
     <!-- Hidden iframe initially -->
     <iframe id="examFrame"></iframe>
+    <p id="timeUpMsg">⏰ Time’s up! Your exam has ended. Please ensure your responses are submitted.</p>
   </section>
 
   <div class="footer">
@@ -109,20 +127,45 @@
   </div>
 
   <script>
+    let timerInterval;
+
     function openExam() {
       const frame = document.getElementById('examFrame');
       const btnSection = document.getElementById('start-btn-section');
       const instructionText = document.getElementById('instruction-text');
-      
+      const timerDisplay = document.getElementById('timer');
+
       frame.src = "https://forms.gle/jNJjfb3CxJerNQdZ6";
       frame.style.display = "block";
-
-      // hide button + text
       btnSection.style.display = "none";
       instructionText.style.display = "none";
+
+      startTimer(60 * 60, timerDisplay); // 60 minutes
+    }
+
+    function startTimer(duration, display) {
+      let timer = duration, minutes, seconds;
+      timerInterval = setInterval(() => {
+        minutes = Math.floor(timer / 60);
+        seconds = timer % 60;
+        display.textContent = `Exam Time: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        
+        if (--timer < 0) {
+          clearInterval(timerInterval);
+          endExam();
+        }
+      }, 1000);
+    }
+
+    function endExam() {
+      const frame = document.getElementById('examFrame');
+      const msg = document.getElementById('timeUpMsg');
+      frame.style.display = "none";
+      msg.style.display = "block";
+      document.getElementById('timer').textContent = "Exam Ended";
+      alert("⏰ Time is up! Your exam session has ended.");
     }
   </script>
 
 </body>
 </html>
-
